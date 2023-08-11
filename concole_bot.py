@@ -1,4 +1,58 @@
-ADDRESSBOOK = {}
+from collections import UserDict
+
+
+class Field:
+    def __init__(self, value) -> None:
+        self.value = value
+
+    def __str__(self) -> str:
+        return f"{self.value}"
+
+
+class Name(Field):
+    pass
+
+
+class Phone(Field):
+    pass
+
+
+class AdressBook(UserDict):
+    def add_record(self, record):
+        self.data[record.name.value] = record
+
+    def delete_record(self, key):
+        rcrd = self.data.get(key)
+        if rcrd:
+            self.data.pop(key)
+            return rcrd
+
+
+class Record:
+    def __init__(self, name: str, phones=[], emails=[]):
+        self.name = name
+        self.phone_list = phones
+        self.email_list = emails
+
+    def add_phone(self, phone):
+        phone_number = Phone(phone)
+        if phone_number not in self.phone_list:
+            self.phone_list.append(phone_number)
+
+    def delete_phone(self, phone):
+        phone_number = Phone(phone)
+        if phone_number in self.phone_list:
+            self.phone_list.remove(phone_number)
+
+    def update_phone(self, phone, new_phone):
+        self.phone_list.remove(phone)
+        self.phone_list.append(new_phone)
+
+    def __str__(self) -> str:
+        return f'User {self.name} has phone {", ".join([phone.value for phone in self.phone_list])}'
+
+
+ADDRESSBOOK = AdressBook()
 
 
 def input_error(inner):
